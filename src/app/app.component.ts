@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import * as firebase from 'firebase';
-import  {firebaseConfig}  from './../config/firebaseConfig';
+import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-root',
@@ -11,8 +10,9 @@ import  {firebaseConfig}  from './../config/firebaseConfig';
 export class AppComponent {
 
   title = 'chat-app';
-
-  constructor(){
-    firebase.default.initializeApp(firebaseConfig);
+  email: string = "";
+  password: string = "";
+  constructor(public authService: AuthService){
   }
+
 }
