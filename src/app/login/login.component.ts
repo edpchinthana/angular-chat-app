@@ -19,10 +19,10 @@ export class LoginComponent implements OnInit {
   loginUser = new LoginUser("", "");
   stayLoggedIn: boolean = false;
 
-  onSubmit(){
+  async onSubmit(){
    try{
-    this.authService.login(this.loginUser.email, this.loginUser.password, this.stayLoggedIn);
-    this.router.navigate(['/'])
+    await this.authService.login(this.loginUser.email, this.loginUser.password, this.stayLoggedIn);
+    this.router.navigate(['/home'])
    }catch(e){
 
    }

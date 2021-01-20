@@ -40,14 +40,14 @@ export class AuthService {
       });    
   }
 
-  login(email: string, password: string, stayLoggedIn: boolean) {
+  async login(email: string, password: string, stayLoggedIn: boolean) {
     if(stayLoggedIn){
       this.firebaseAuth.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
     }else{
       this.firebaseAuth.auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
     }
 
-    this.firebaseAuth
+    await this.firebaseAuth
       .auth
       .signInWithEmailAndPassword(email, password)
       .then(()=> {
