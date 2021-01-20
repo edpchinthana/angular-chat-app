@@ -8,10 +8,25 @@ import * as firebase from 'firebase/app';
 })
 export class AuthService {
   user: Observable<firebase.User|null>;
+  private userDetails: firebase.User | null = null;
 
   constructor(private firebaseAuth: AngularFireAuth) {
+    console.log('auth constructor');
     this.user = firebaseAuth.authState;
-  }
+
+    this.user.subscribe(
+      (user) => {
+        if (user) {
+          this.userDetails = user;
+          console.log(this.userDetails);
+        }
+        else {
+          this.userDetails = null;
+        }
+      }
+    );
+   }
+
 
   signup(email: string, password: string) {
     this.firebaseAuth
@@ -25,7 +40,13 @@ export class AuthService {
       });    
   }
 
-  login(email: string, password: string) {
+  login(email: string, password: string, stayLoggedIn: boolean) {
+    if(stayLoggedIn){
+      this.firebaseAuth.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    }else{
+      this.firebaseAuth.auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+    }
+
     this.firebaseAuth
       .auth
       .signInWithEmailAndPassword(email, password)
@@ -39,8 +60,21 @@ export class AuthService {
 
   logout() {
     console.log("on logout");
-    this.firebaseAuth
+    try{
+      this.firebaseAuth
       .auth
       .signOut();
+    }catch(e){
+      throw e;
+    }
   }
+
+   isLoggedIn(): boolean | Promise<boolean> {
+    if (this.userDetails == null ) {
+        return false;
+      } else {
+        console.log(this.userDetails)
+        return true;
+      }
+    }
 }
